@@ -9,7 +9,7 @@
 ## Overview
 **MedifyAI** is an intelligent Generative AI chatbot designed to predict potential health conditions based on user-described symptoms. 
 
-This project addresses the challenge of running Large Language Models (LLMs) on consumer hardware. [cite_start]By leveraging **Parameter-Efficient Fine-Tuning (PEFT)** and **Quantization**, MedifyAI achieves high-performance domain adaptation for medical diagnostics while drastically reducing memory requirements[cite: 41, 42].
+This project addresses the challenge of running Large Language Models (LLMs) on consumer hardware. By leveraging **Parameter-Efficient Fine-Tuning (PEFT)** and **Quantization**, MedifyAI achieves high-performance domain adaptation for medical diagnostics while drastically reducing memory requirements.
 
 ## Technical Deep Dive
 This project implements advanced optimization techniques to enable fine-tuning on limited compute resources (e.g., a single GPU).
@@ -17,23 +17,23 @@ This project implements advanced optimization techniques to enable fine-tuning o
 ### 1. 4-Bit Quantization (QLoRA)
 Standard LLMs (like Llama-2 or Mistral) require massive VRAM (approx. 14GB for a 7B model in FP16). 
 * **Method:** We employed **NF4 (Normal Float 4)** quantization to load the model in 4-bit precision.
-* [cite_start]**Impact:** This reduces the memory footprint by nearly **4x**, allowing the model to fit into ~4-6GB of VRAM while retaining near-original performance[cite: 42].
+* **Impact:** This reduces the memory footprint by nearly **4x**, allowing the model to fit into ~4-6GB of VRAM while retaining near-original performance.
 
 ### 2. Low-Rank Adaptation (LoRA)
 Instead of fine-tuning all 7 billion parameters (which is computationally expensive and prone to catastrophic forgetting), we used **LoRA**.
 * **Method:** We freeze the pre-trained model weights and inject trainable rank decomposition matrices into the layers of the Transformer architecture.
-* [cite_start]**Impact:** This reduces the number of trainable parameters by **~98%**, significantly speeding up training[cite: 42].
+* **Impact:** This reduces the number of trainable parameters by **~98%**, significantly speeding up training.
 
 ### 3. Paged AdamW Optimizer
 Fine-tuning large models often leads to GPU Out-Of-Memory (OOM) errors during gradient spikes.
 * **Method:** We utilized **Paged AdamW**, a custom optimizer from `bitsandbytes`.
-* [cite_start]**Impact:** It manages memory peaks by offloading optimizer states to CPU RAM when the GPU memory limits are reached, ensuring stable training runs[cite: 42].
+* **Impact:** It manages memory peaks by offloading optimizer states to CPU RAM when the GPU memory limits are reached, ensuring stable training runs.
 
 ### 4. Loss Optimization
 * **Method:** We optimized the model using **Cross-Entropy Loss**, focusing on minimizing the divergence between the predicted tokens and the ground-truth medical completions.
-* [cite_start]**Impact:** Improved the model's ability to generate medically accurate and context-aware responses[cite: 43].
+* **Impact:** Improved the model's ability to generate medically accurate and context-aware responses.
 
-## 🛠️ Tech Stack
+## Tech Stack
 * **Core:** Python, PyTorch
 * **Hugging Face:** `transformers`, `accelerate`, `peft` (Parameter-Efficient Fine-Tuning)
 * **Optimization:** `bitsandbytes` (for quantization)
